@@ -1,0 +1,68 @@
+/**
+ * jonathan.lareau@gmail.com
+ *
+ * To (re)generate proto :
+ * protoc --go_out=plugins=grpc:. *.proto
+ * In this folder (proto)
+ *
+ * To get protoc : https://github.com/protocolbuffers/protobuf/releases
+ *
+ **/
+
+syntax = "proto3";
+
+package pb;
+
+message Id {
+    int64 id = 1;
+}
+
+message Result {
+    int32 code = 1;
+    string msg = 2;
+}
+
+message User{
+    int64 userId = 1;
+    string firstName = 2;
+    string lastName = 3;
+    int32 age = 4;
+}
+
+service UserService {
+    rpc CreateUser(User) returns (Result) {}
+    rpc ReadUser(Id) returns (User) {}
+    rpc UpdateUser(User) returns (Result) {}
+    rpc DeleteUser(Id) returns (Result) {}
+}
+
+message Product{
+    int64 productId = 1;
+    string name = 2;
+    string description = 3;
+}
+
+service ProductService {
+    rpc Create(Product) returns (Result) {}
+    rpc Read(Id) returns (Product) {}
+    rpc Update(Product) returns (Result) {}
+    rpc Delete(Id) returns (Result) {}
+}
+
+message Order {
+    int64 orderId = 1;
+    int64 userId = 2;
+    int64 productId = 3;
+    int32 quantity = 4;
+    int64 orderDate = 5;
+    int64 shipDate = 6;
+}
+
+service OrderService {
+    rpc Create(Order) returns (Result) {}
+    rpc Read(Id) returns (Order) {}
+    rpc Update(Order) returns (Result) {}
+    rpc Delete(Id) returns (Result) {}
+}
+
+
