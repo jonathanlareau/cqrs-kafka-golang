@@ -1,5 +1,5 @@
 
-package service
+package main
 
 import (
 	pb "github.com/jonathanlareau/cqrs-kafka-golang/proto"

@@ -22,19 +22,21 @@
 	 "golang.org/x/net/context"
 	 "google.golang.org/grpc"
  )
- 
  func main() {
-	 //	Make sur to use same name and port in you deployment
+	count := 0
+
+	//	Make sur to use same name and port in you deployment
 	 //conn, err := grpc.Dial("sayhello-service:3000", grpc.WithInsecure())
 	 conn, err := grpc.Dial("sayhello-service:3000", grpc.WithInsecure())
 	 if err != nil {
 		 panic(err)
 	 }
-	 sayHelloClient := pb.NewSayHelloServiceClient(conn)
+	 userServiceClient := pb.NewUserServiceClient(conn)
  
 	 routes := mux.NewRouter()
 	 routes.HandleFunc("/", indexHandler).Methods("GET")
 	 routes.HandleFunc("/api/sayhello/{msg}", func(w http.ResponseWriter, r *http.Request) {
+		 count++
 		 w.Header().Set("Content-Type", "application/json; charset=UFT-8")
  
 		 vars := mux.Vars(r)
@@ -45,12 +47,14 @@
 		 ctx, cancel := context.WithTimeout(context.TODO(), time.Minute)
 		 defer cancel()
  
+		 user := &pb.User{UserId: int64(count), FirstName: vars["msg"], LastName: "Lareau", Age: 44}
+
 		 //Call server in grpc
-		 req := &pb.SayHiRequest{RequestMsg: vars["msg"]}
+		 //req := &pb.SayHiRequest{RequestMsg: vars["msg"]}
  
 		 //Send the response back
-		 if resp, err := sayHelloClient.Compute(ctx, req); err == nil {
-			 msg := fmt.Sprintf("Response is %s", resp.ResponseMsg)
+		 if result, err := userServiceClient.CreateUser(ctx, user); err == nil {
+			 msg := fmt.Sprintf("Response is %s", result.Msg)
 			 json.NewEncoder(w).Encode(msg)
 		 } else {
 			 errorMsg := fmt.Sprintf("Internal Error: %s !!!!", err.Error())
