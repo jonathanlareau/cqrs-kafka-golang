@@ -26,3 +26,26 @@ C:\kafka_2.13-2.4.0\bin\windows/kafka-console-consumer.bat -bootstrap-server kaf
 ## Run Redis
 
 docker run -d -p 6379:6379 redis
+
+## Run Postgresql
+docker run -d -p 5432:5432 --name postgresql -e POSTGRES_PASSWORD=password postgres
+
+docker exec -it postgresql /bin/sh
+
+psql -h localhost -U postgres
+
+CREATE DATABASE cqrs;
+
+\connect cqrs
+
+CREATE TABLE cqrs_user(
+   userid integer PRIMARY KEY,
+   firstname VARCHAR (50) NOT NULL,
+   lastname VARCHAR (50) NOT NULL,
+   age integer NOT NULL
+);
+
+INSERT INTO cqrs_user VALUES(0, 'jonny','love',33);
+INSERT INTO cqrs_user VALUES(1, 'john','doe',33);
+
+SELECT * FROM cqrs_user

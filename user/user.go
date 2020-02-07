@@ -6,6 +6,7 @@ import (
 	"log"
 	"net"
 	"strings"
+	"os"
 
 	"github.com/gomodule/redigo/redis"
 	"github.com/jonathanlareau/cqrs-kafka-golang/cqrs"
@@ -14,6 +15,7 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
+	"github.com/jackc/pgx/v4"
 )
 
 // CreateUser verew
@@ -62,14 +64,81 @@ var createUserConsumer cqrs.Consumer = nil
 var updateUserConsumer cqrs.Consumer = nil
 var deleteUserConsumer cqrs.Consumer = nil
 var redisClient redis.Conn = nil
+var dbConn *pgx.Conn
 
 func main() {
 	var err error
-	redisClient, err = redis.Dial("tcp", "192.168.99.100:6379")
+	redisClient, err = redis.Dial("tcp", "192.168.99.101:6379")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer redisClient.Close()
+
+	//conn = pg.DB(host="localhost", user="USERNAME", passwd="PASSWORD", dbname="DBNAME")
+
+//db.connect(host='postgres://candidate.suade.org/company', database='randomname', user='candidate', password='abc', port='5432')
+
+	//conn, err := pgx.Connect(context.Background(), "host="192.168.99.101,port='5432'")
+	//var err error
+	dbConn, err = pgx.Connect(context.Background(), "postgresql://postgres:password@192.168.99.101:5432/cqrs")
+	fmt.Println(dbConn)
+	//conn, err := pgx.Connect(context.Background(), "host='192.168.99.101', database='cqrs_user',user='postgres', password='password',port='5432'")
+	//if err != nil {
+	//	fmt.Fprintf(os.Stderr, "Unable to connection to database: %v\n", err)
+	//	os.Exit(1)
+	//}
+	//defer dbConn.Close(context.Background())
+
+	var userid int64
+	var firstname string
+	var lastname string
+	var age int32
+	err = dbConn.QueryRow(context.Background(), "select userid,firstname,lastname,age from cqrs_user where userid=$1", 1).Scan(&userid,&firstname, &lastname,&age)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Println(userid,firstname, lastname,age)
+
+	var dbuser pb.User
+	err = dbConn.QueryRow(context.Background(), "select userid,firstname,lastname,age from cqrs_user where userid=$1", 0).Scan(&dbuser.UserId,&dbuser.FirstName, &dbuser.LastName,&dbuser.Age)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Println(dbuser)
+
+	//var dbuser pb.User
+	dbConn.Exec(context.Background(), "insert into cqrs_user (userid, firstname, lastname, age) values( $1,$2,$3,$4) ", 5,dbuser.FirstName,dbuser.LastName,dbuser.Age)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Println(dbuser)
+
+//	userf := ReadUserFromDB(5)
+//	fmt.Println(userf)
+
+    fmt.Println("next user id")
+	id := ReadNextUserId()
+	fmt.Println(id)
+
+	usere := pb.User{UserId: 11, FirstName: "Jonathan", LastName: "Lareau", Age: 44}
+
+	userf := CreateUserInDb(usere)
+	fmt.Println(userf)
+
+
+	usere = pb.User{UserId: 11, FirstName: "Jonathan", LastName: "Lareau", Age: 44}
+
+	usere.FirstName="testname"
+	userg := UpdateUserInDb(usere)
+	fmt.Println(userg)
+
+	DeleteUserFromDb(0) 
 
 	lis, err := net.Listen("tcp", ":3000")
 	if err != nil {
@@ -179,4 +248,66 @@ func GetFromRedis(key int64) pb.User {
 		fmt.Println(s)
 	}
 	return user
+}
+
+// Not Prod Ready... just for test
+func ReadNextUserId() int64{
+	var userId int64
+	err := dbConn.QueryRow(context.Background(), "select max(userid) from cqrs_user").Scan(&userId)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
+		os.Exit(1)
+	}
+	fmt.Println(userId)
+	userId++
+	return userId
+}
+
+func ReadUserFromDb(user int64) pb.User{
+	var dbuser pb.User
+	//fmt.Println(dbConn)
+	fmt.Println(context.Background())
+	err := dbConn.QueryRow(context.Background(), "select userid,firstname,lastname,age from cqrs_user where userid=$1", 0).Scan(&dbuser.UserId,&dbuser.FirstName,&dbuser.LastName,&dbuser.Age)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
+		os.Exit(1)
+	}
+	fmt.Println(dbuser)
+	return dbuser
+}
+
+func CreateUserInDb(user pb.User) pb.User{
+	fmt.Println("create")
+	userId := ReadNextUserId()
+	value, err := dbConn.Exec(context.Background(), "insert into cqrs_user (userid, firstname, lastname, age) values( $1,$2,$3,$4) ", userId, user.FirstName,  user.LastName, user.Age)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
+		os.Exit(1)
+	}
+	fmt.Println(value)
+	fmt.Println(userId)
+	return ReadUserFromDb(userId)
+}
+
+func UpdateUserInDb(user pb.User) pb.User{
+	fmt.Println("update")
+	value, err := dbConn.Exec(context.Background(), "update cqrs_user set firstname = $2, lastname = $3, age = $4 where userid = $1 ", user.UserId, user.FirstName,  user.LastName, user.Age)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
+		os.Exit(1)
+	}
+	fmt.Println(value)
+	fmt.Println(user)
+	return ReadUserFromDb(user.UserId)
+}
+
+func DeleteUserFromDb(user int64) {
+	fmt.Println("update")
+	value, err := dbConn.Exec(context.Background(), "delete from cqrs_user where userid = $1 ", user)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
+		os.Exit(1)
+	}
+	fmt.Println(value)
+
 }
