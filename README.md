@@ -1,5 +1,8 @@
 # cqrs-kafka-golang
 
+## Overview
+![CQRS](Cqrs.jpeg)
+
 ## Start Kafka
 - zookeeper
 
