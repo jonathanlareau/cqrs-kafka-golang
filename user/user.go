@@ -12,6 +12,7 @@ import (
 	"encoding/json"
 	"log"
 	"net"
+	"strconv"
 	"strings"
 
 	"github.com/gomodule/redigo/redis"
@@ -148,12 +149,12 @@ func (s *server) DeleteUser(cxt context.Context, id *pb.Id) (*pb.Result, error) 
 
 // setInRedis Set a User Entry in Redis
 func setInRedis(user pb.User) {
-	log.Println("setInRedis", user)
+	log.Println("setInRedis ", user)
 	marsh, errMarsh := json.Marshal(user)
 	if errMarsh != nil {
 		log.Printf("Error while Unmarshal a message: %v", errMarsh)
 	}
-	_, errRedis := redisClient.Do("HMSET", "user-"+string(user.UserId), "user", marsh)
+	_, errRedis := redisClient.Do("SET", "user-"+strconv.FormatInt(user.UserId, 10), marsh)
 	if errRedis != nil {
 		log.Printf("Error while Unmarshal a message: %v", errRedis)
 	}
@@ -161,14 +162,11 @@ func setInRedis(user pb.User) {
 
 // getInRedis Get a User Entry in Redis
 func getInRedis(id int64) pb.User {
-	log.Println("setInRedis", id)
-	var newUser []byte
-	_, errRedis := redisClient.Do("HMGET", "user-"+string(id), "user", &newUser)
-	log.Println(newUser)
+	log.Println("getInRedis ", id)
+	newUser, errRedis := redis.Bytes(redisClient.Do("GET", "user-"+strconv.FormatInt(id, 10)))
 	if newUser == nil {
 		log.Printf("User not found in Redis")
 		user := readUserInDb(id)
-		log.Println("User in DB ", user)
 		setInRedis(user)
 		return user
 	}
@@ -176,7 +174,7 @@ func getInRedis(id int64) pb.User {
 		log.Printf("Error while Unmarshal a message: %v", errRedis)
 	}
 	var user pb.User
-	err := json.Unmarshal(newUser, &user)
+	err := json.Unmarshal([]byte(newUser), &user)
 	if err != nil {
 		log.Printf("Error while Unmarshal a message: %v", err)
 	}
@@ -184,8 +182,9 @@ func getInRedis(id int64) pb.User {
 }
 
 // removeInRedis Remove a User Entry in Redis
-func removeInRedis(key int64) {
-	_, errRedis := redisClient.Do("HDEL", "user-"+string(key), "user")
+func removeInRedis(id int64) {
+	log.Println("removeInRedis ", id)
+	_, errRedis := redisClient.Do("DEL", "user-"+strconv.FormatInt(id, 10))
 	if errRedis != nil {
 		log.Printf("Error while Unmarshal a message: %v", errRedis)
 	}
@@ -210,7 +209,8 @@ func readUserInDb(userID int64) pb.User {
 	var dbuser pb.User
 	log.Println("Read db id ", userID)
 	if err := dbConn.QueryRow(context.Background(), "select userid,firstname,lastname,age from cqrs_user where userid=$1", userID).Scan(&dbuser.UserId, &dbuser.FirstName, &dbuser.LastName, &dbuser.Age); err != nil {
-		log.Fatalf("QueryRow failed: %v\n", err)
+		log.Printf("QueryRow failed: %v\n", err)
+		return pb.User{}
 	}
 	log.Println(dbuser)
 	return dbuser

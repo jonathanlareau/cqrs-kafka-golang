@@ -44,10 +44,10 @@ message Product{
 }
 
 service ProductService {
-    rpc Create(Product) returns (Result) {}
-    rpc Read(Id) returns (Product) {}
-    rpc Update(Product) returns (Result) {}
-    rpc Delete(Id) returns (Result) {}
+    rpc CreateProduct(Product) returns (Product) {}
+    rpc ReadProduct(Id) returns (Product) {}
+    rpc UpdateProduct(Product) returns (Result) {}
+    rpc DeleteProduct(Id) returns (Result) {}
 }
 
 message Order {
@@ -60,10 +60,10 @@ message Order {
 }
 
 service OrderService {
-    rpc Create(Order) returns (Result) {}
-    rpc Read(Id) returns (Order) {}
-    rpc Update(Order) returns (Result) {}
-    rpc Delete(Id) returns (Result) {}
+    rpc CreateOrder(Order) returns (Order) {}
+    rpc ReadOrder(Id) returns (Order) {}
+    rpc UpdateOrder(Order) returns (Result) {}
+    rpc DeleteOrder(Id) returns (Result) {}
 }
 
 

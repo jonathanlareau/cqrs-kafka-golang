@@ -30,7 +30,9 @@ C:\kafka_2.13-2.4.0\bin\windows/kafka-console-consumer.bat -bootstrap-server kaf
 
 ## Run Redis
 
-docker run -d -p 6379:6379 redis
+docker run -d -p 6379:6379 --name redis redis
+
+docker exec -it redis  redis-cli
 
 ## Run Postgresql
 docker run -d -p 5432:5432 --name postgresql -e POSTGRES_PASSWORD=password postgres
@@ -48,6 +50,12 @@ CREATE TABLE cqrs_user(
    firstname VARCHAR (50) NOT NULL,
    lastname VARCHAR (50) NOT NULL,
    age integer NOT NULL
+);
+
+CREATE TABLE cqrs_product(
+   productid serial PRIMARY KEY,
+   name VARCHAR (50) NOT NULL,
+   description VARCHAR (50) NOT NULL
 );
 
 SELECT * FROM cqrs_user
