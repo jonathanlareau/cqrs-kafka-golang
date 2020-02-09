@@ -19,7 +19,9 @@ From user.go:
 - deleteUserTopic   = "user-delete"
 
 C:\kafka_2.13-2.4.0\bin\windows/kafka-topics.bat –create –zookeeper kafka-zookeeper:2181 –replication-factor 1 –partitions 1 –topic user-create
+
 C:\kafka_2.13-2.4.0\bin\windows/kafka-topics.bat –create –zookeeper kafka-zookeeper:2181 –replication-factor 1 –partitions 1 –topic user-update
+
 C:\kafka_2.13-2.4.0\bin\windows/kafka-topics.bat –create –zookeeper kafka-zookeeper:2181 –replication-factor 1 –partitions 1 –topic user-delete
 
 ## To see your messages
@@ -48,14 +50,14 @@ CREATE TABLE cqrs_user(
    age integer NOT NULL
 );
 
-INSERT INTO cqrs_user VALUES(0, 'jonny','love',33);
-INSERT INTO cqrs_user VALUES(1, 'john','doe',33);
-
 SELECT * FROM cqrs_user
 
 ## Test
 *ToDo fix to respect RestFull Api Method*
-http://localhost:8080/api/user/create/firstname/myfirst/lastname/mylast/age/32/
-http://localhost:8080/api/user/read/3/
-http://localhost:8080/api/user/update/12/firstname/myfirst/lastname/mylast/age/32/
-http://localhost:8080/api/user/delete/12/
+curl http://localhost:8080/api/user/create/firstname/myfirst0/lastname/mylast0/age/31/
+curl http://localhost:8080/api/user/create/firstname/myfirst1/lastname/mylast1/age/32/
+curl http://localhost:8080/api/user/create/firstname/myfirst2/lastname/mylast2/age/33/
+curl http://localhost:8080/api/user/create/firstname/myfirst3/lastname/mylast3/age/34/
+curl http://localhost:8080/api/user/read/3/
+curl http://localhost:8080/api/user/update/3/firstname/myfirst4/lastname/mylast4/age/35/
+curl http://localhost:8080/api/user/delete/3/
