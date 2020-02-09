@@ -54,10 +54,17 @@ SELECT * FROM cqrs_user
 
 ## Test
 *ToDo fix to respect RestFull Api Method*
+
 curl http://localhost:8080/api/user/create/firstname/myfirst0/lastname/mylast0/age/31/
+
 curl http://localhost:8080/api/user/create/firstname/myfirst1/lastname/mylast1/age/32/
+
 curl http://localhost:8080/api/user/create/firstname/myfirst2/lastname/mylast2/age/33/
+
 curl http://localhost:8080/api/user/create/firstname/myfirst3/lastname/mylast3/age/34/
+
 curl http://localhost:8080/api/user/read/3/
+
 curl http://localhost:8080/api/user/update/3/firstname/myfirst4/lastname/mylast4/age/35/
+
 curl http://localhost:8080/api/user/delete/3/
