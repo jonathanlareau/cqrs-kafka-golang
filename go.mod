@@ -7,7 +7,7 @@ require (
 	github.com/gomodule/redigo v2.0.0+incompatible
 	github.com/google/uuid v1.1.1
 	github.com/gorilla/mux v1.7.3
-	github.com/jackc/pgx/v4 v4.4.0 // indirect
+	github.com/jackc/pgx/v4 v4.4.0
 	github.com/segmentio/kafka-go v0.3.5
 	golang.org/x/net v0.0.0-20200202094626-16171245cfb2
 	google.golang.org/grpc v1.27.1
