@@ -42,7 +42,7 @@ CREATE DATABASE cqrs;
 \connect cqrs
 
 CREATE TABLE cqrs_user(
-   userid integer PRIMARY KEY,
+   userid serial PRIMARY KEY,
    firstname VARCHAR (50) NOT NULL,
    lastname VARCHAR (50) NOT NULL,
    age integer NOT NULL
@@ -54,7 +54,8 @@ INSERT INTO cqrs_user VALUES(1, 'john','doe',33);
 SELECT * FROM cqrs_user
 
 ## Test
-http://localhost:8080/api/user/create/12/firstname/myfirst/lastname/mylast/age/32/
-http://localhost:8080/api/user/read/0/
+*ToDo fix to respect RestFull Api Method*
+http://localhost:8080/api/user/create/firstname/myfirst/lastname/mylast/age/32/
+http://localhost:8080/api/user/read/3/
 http://localhost:8080/api/user/update/12/firstname/myfirst/lastname/mylast/age/32/
 http://localhost:8080/api/user/delete/12/

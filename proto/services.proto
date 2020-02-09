@@ -2,6 +2,7 @@
  * jonathan.lareau@gmail.com
  *
  * To (re)generate proto :
+ * go get -u github.com/golang/protobuf/protoc-gen-go
  * protoc --go_out=plugins=grpc:. *.proto
  * In this folder (proto)
  *
@@ -30,7 +31,7 @@ message User{
 }
 
 service UserService {
-    rpc CreateUser(User) returns (Result) {}
+    rpc CreateUser(User) returns (User) {}
     rpc ReadUser(Id) returns (User) {}
     rpc UpdateUser(User) returns (Result) {}
     rpc DeleteUser(Id) returns (Result) {}

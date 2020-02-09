@@ -6,12 +6,11 @@
  * Facade for services user, proder and order
  *
  **/
-
 package main
 
 import (
 	"encoding/json"
-	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -34,9 +33,9 @@ func main() {
 	routes.HandleFunc("/", indexHandler).Methods("GET")
 	//For simplify the tests we use GET but must be change
 	//Create Methode: Post
-	routes.HandleFunc("/api/user/create/{id}/firstname/{firstname}/lastname/{lastname}/age/{age}/", func(w http.ResponseWriter, r *http.Request) {
+	routes.HandleFunc("/api/user/create/firstname/{firstname}/lastname/{lastname}/age/{age}/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json; charset=UFT-8")
-		fmt.Println("Facade Create User")
+		log.Println("Facade Create User")
 		vars := mux.Vars(r)
 		if err != nil {
 			json.NewEncoder(w).Encode("Invalid parameter")
@@ -45,62 +44,51 @@ func main() {
 		ctx, cancel := context.WithTimeout(context.TODO(), time.Minute)
 		defer cancel()
 
-		id, errid := strconv.ParseInt(vars["id"], 10, 64)
-		if errid != nil {
-			json.NewEncoder(w).Encode("Invalid parameter Id")
-		}
 		age, errage := strconv.ParseInt(vars["age"], 10, 32)
 		if errage != nil {
 			json.NewEncoder(w).Encode("Invalid parameter age")
 		}
-		user := &pb.User{UserId: id, FirstName: vars["firstname"], LastName: vars["lastname"], Age: int32(age)}
+		user := &pb.User{FirstName: vars["firstname"], LastName: vars["lastname"], Age: int32(age)}
 
 		//Send the response back
-		if result, err := userServiceClient.CreateUser(ctx, user); err == nil {
-			msg := fmt.Sprintf("Response is %s", result.Msg)
-			code := fmt.Sprintf("Response is %d", result.Code)
-			json.NewEncoder(w).Encode(msg)
-			json.NewEncoder(w).Encode(code)
+		if newUser, err := userServiceClient.CreateUser(ctx, user); err == nil {
+			json.NewEncoder(w).Encode(newUser)
 		} else {
-			errorMsg := fmt.Sprintf("Creation Internal Error: %s !!!!", err.Error())
-			json.NewEncoder(w).Encode(errorMsg)
+			json.NewEncoder(w).Encode(err.Error())
 		}
 	}).Methods("GET") //Create
 
 	//Read Methode: Get
 	routes.HandleFunc("/api/user/read/{id}/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json; charset=UFT-8")
-		fmt.Println("Facade Read User1")
+		log.Println("Facade Read User")
 		vars := mux.Vars(r)
 		if err != nil {
 			json.NewEncoder(w).Encode("Invalid parameter")
 		}
-		fmt.Println("Facade Read User2")
+
 		ctx, cancel := context.WithTimeout(context.TODO(), time.Minute)
 		defer cancel()
-		fmt.Println("Facade Read User3")
+
 		id, errid := strconv.ParseInt(vars["id"], 10, 64)
 		if errid != nil {
 			json.NewEncoder(w).Encode("Invalid parameter Id")
 		}
-		fmt.Println("Facade Read User4")
+
 		userID := pb.Id{Id: id}
-		fmt.Println(userID)
+		log.Println(userID)
 		//Send the response back
 		if user, err := userServiceClient.ReadUser(ctx, &userID); err == nil {
-			fmt.Println(user)
 			json.NewEncoder(w).Encode(user)
 		} else {
-			errorMsg := fmt.Sprintf("Internal Error: %s !!!!", err.Error())
-			json.NewEncoder(w).Encode(errorMsg)
+			json.NewEncoder(w).Encode(err.Error())
 		}
-		fmt.Println("Facade Read User5")
 	}).Methods("GET") //Read
 
 	//Update Methode: Put
 	routes.HandleFunc("/api/user/update/{id}/firstname/{firstname}/lastname/{lastname}/age/{age}/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json; charset=UFT-8")
-		fmt.Println("Facade Update User")
+		log.Println("Facade Update User")
 		vars := mux.Vars(r)
 		if err != nil {
 			json.NewEncoder(w).Encode("Invalid parameter MSG")
@@ -121,20 +109,16 @@ func main() {
 
 		//Send the response back
 		if result, err := userServiceClient.UpdateUser(ctx, user); err == nil {
-			msg := fmt.Sprintf("Response is %s", result.Msg)
-			code := fmt.Sprintf("Response is %d", result.Code)
-			json.NewEncoder(w).Encode(msg)
-			json.NewEncoder(w).Encode(code)
+			json.NewEncoder(w).Encode(result.Msg)
 		} else {
-			errorMsg := fmt.Sprintf("Internal Error: %s !!!!", err.Error())
-			json.NewEncoder(w).Encode(errorMsg)
+			json.NewEncoder(w).Encode(err.Error())
 		}
 	}).Methods("GET") //Update
 
 	//Create Methode: Post
 	routes.HandleFunc("/api/user/delete/{id}/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json; charset=UFT-8")
-		fmt.Println("Facade Delete User")
+		log.Println("Facade Delete User")
 		vars := mux.Vars(r)
 		if err != nil {
 			json.NewEncoder(w).Encode("Invalid parameter MSG")
@@ -149,18 +133,17 @@ func main() {
 		}
 
 		userID := pb.Id{Id: id}
-		fmt.Println(id)
+		log.Println(id)
 		//Send the response back
 		if user, err := userServiceClient.DeleteUser(ctx, &userID); err == nil {
 			json.NewEncoder(w).Encode(user)
 		} else {
-			errorMsg := fmt.Sprintf("Internal Error: %s !!!!", err.Error())
-			json.NewEncoder(w).Encode(errorMsg)
+			json.NewEncoder(w).Encode(err.Error())
 		}
 	}).Methods("GET") //Delete
 
 	//Listening for Rest calls
-	fmt.Println("Application is running on : 8080 .....")
+	log.Println("Application is running on : 8080 .....")
 	http.ListenAndServe(":8080", routes)
 }
 
