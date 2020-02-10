@@ -14,6 +14,7 @@ import (
 	"net"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gomodule/redigo/redis"
 	"github.com/jackc/pgx/v4"
@@ -42,7 +43,7 @@ func main() {
 	var err error
 
 	// Initilize the connection with Postgresql
-	redisClient, err = redis.Dial("tcp", "192.168.99.100:6379")
+	redisClient, err = redis.Dial("tcp", "192.168.99.101:6379")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -50,7 +51,7 @@ func main() {
 	defer redisClient.Close()
 
 	// Initilize the connection with Postgresql
-	dbConn, err = pgx.Connect(context.Background(), "postgresql://postgres:password@192.168.99.100:5432/cqrs")
+	dbConn, err = pgx.Connect(context.Background(), "postgresql://postgres:password@192.168.99.101:5432/cqrs")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -235,7 +236,7 @@ func removeInRedis(id int64) {
 func createUserInDb(user pb.User) pb.User {
 	log.Println("Create user id DB ", user)
 	var userID int64
-	err := dbConn.QueryRow(context.Background(), "insert into cqrs_user (firstname, lastname, age) values( $1,$2,$3) RETURNING userid", user.FirstName, user.LastName, user.Age).Scan(&userID)
+	err := dbConn.QueryRow(context.Background(), "insert into cqrs_user (firstname, lastname, age, updatedate, createdate) values( $1,$2,$3,$4,$5) RETURNING userid", user.FirstName, user.LastName, user.Age, time.Now(), time.Now()).Scan(&userID)
 	if err != nil {
 		log.Fatalf("QueryRow failed: %v\n", err)
 	}
@@ -247,10 +248,14 @@ func createUserInDb(user pb.User) pb.User {
 func readUserInDb(userID int64) pb.User {
 	var dbuser pb.User
 	log.Println("Read db id ", userID)
-	if err := dbConn.QueryRow(context.Background(), "select userid,firstname,lastname,age from cqrs_user where userid=$1", userID).Scan(&dbuser.UserId, &dbuser.FirstName, &dbuser.LastName, &dbuser.Age); err != nil {
+	updateTime := time.Now()
+	createTime := time.Now()
+	if err := dbConn.QueryRow(context.Background(), "select userid,firstname,lastname,age,updatedate,createdate from cqrs_user where userid=$1", userID).Scan(&dbuser.UserId, &dbuser.FirstName, &dbuser.LastName, &dbuser.Age, &updateTime, &createTime); err != nil {
 		log.Printf("QueryRow failed: %v\n", err)
 		return pb.User{}
 	}
+	dbuser.UpdateDate = createTime.UnixNano() / 1000000
+	dbuser.CreateDate = updateTime.UnixNano() / 1000000
 	log.Println(dbuser)
 	return dbuser
 }
@@ -258,7 +263,7 @@ func readUserInDb(userID int64) pb.User {
 // updateUserInDb Update User From Database
 func updateUserInDb(user pb.User) pb.User {
 	log.Println("update")
-	value, err := dbConn.Exec(context.Background(), "update cqrs_user set firstname = $2, lastname = $3, age = $4 where userid = $1 ", user.UserId, user.FirstName, user.LastName, user.Age)
+	value, err := dbConn.Exec(context.Background(), "update cqrs_user set firstname = $2, lastname = $3, age = $4, updatedate = $5 where userid = $1 ", user.UserId, user.FirstName, user.LastName, user.Age, time.Now())
 	if err != nil {
 		log.Fatalf("QueryRow failed: %v\n", err)
 	}

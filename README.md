@@ -41,6 +41,8 @@ docker exec -it postgresql /bin/sh
 
 psql -h localhost -U postgres
 
+docker exec -it postgresql psql -h localhost -U postgres
+
 CREATE DATABASE cqrs;
 
 \connect cqrs
@@ -49,13 +51,17 @@ CREATE TABLE cqrs_user(
    userid serial PRIMARY KEY,
    firstname VARCHAR (50) NOT NULL,
    lastname VARCHAR (50) NOT NULL,
-   age integer NOT NULL
+   age integer NOT NULL,
+   updatedate date NOT NULL,
+   createdate date NOT NULL
 );
 
 CREATE TABLE cqrs_product(
    productid serial PRIMARY KEY,
    name VARCHAR (50) NOT NULL,
-   description VARCHAR (50) NOT NULL
+   description VARCHAR (50) NOT NULL,
+   updatedate date NOT NULL,
+   createdate date NOT NULL
 );
 
 SELECT * FROM cqrs_user
@@ -71,8 +77,8 @@ curl http://localhost:8080/api/user/create/firstname/myfirst2/lastname/mylast2/a
 
 curl http://localhost:8080/api/user/create/firstname/myfirst3/lastname/mylast3/age/34/
 
-curl http://localhost:8080/api/user/read/3/
+curl http://localhost:8080/api/user/read/4/
 
-curl http://localhost:8080/api/user/update/3/firstname/myfirst4/lastname/mylast4/age/35/
+curl http://localhost:8080/api/user/update/4/firstname/myfirst4/lastname/mylast4/age/35/
 
-curl http://localhost:8080/api/user/delete/3/
+curl http://localhost:8080/api/user/delete/4/
