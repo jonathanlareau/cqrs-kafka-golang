@@ -105,12 +105,12 @@ func main() {
 // Response to CreateUser Service
 func (s *server) CreateUser(cxt context.Context, user *pb.User) (*pb.User, error) {
 	log.Println("CreateUser")
-	newUser := pb.User{}
-	dbuser := createUserInDb(newUser)
-	user.UserId = dbuser.UserId
 	if err := validate(user); err != nil {
 		return user, err
 	}
+	newUser := pb.User{}
+	dbuser := createUserInDb(newUser)
+	user.UserId = dbuser.UserId
 	if err := updateUserPublisher.Publish(context.Background(), user); err != nil {
 		log.Fatal(err)
 	}
@@ -143,6 +143,45 @@ func (s *server) DeleteUser(cxt context.Context, id *pb.Id) (*pb.Result, error) 
 		log.Fatal(err)
 	}
 	return &pb.Result{Code: 0, Msg: "Delete User Message Published"}, nil
+}
+
+// Response to CreateSyncUser Service
+func (s *server) CreateSyncUser(cxt context.Context, user *pb.User) (*pb.User, error) {
+	log.Println("CreateSyncUser")
+	if err := validate(user); err != nil {
+		return user, err
+	}
+	dbuser := createUserInDb(*user)
+	return &dbuser, nil
+}
+
+// Response to ReadSyncUser Service
+func (s *server) ReadSyncUser(cxt context.Context, id *pb.Id) (*pb.User, error) {
+	log.Println("ReadUser ", id)
+	user := readUserInDb(id.Id)
+	return &user, nil
+}
+
+// Response to UpdateSyncUser Service
+func (s *server) UpdateSyncUser(cxt context.Context, user *pb.User) (*pb.Result, error) {
+	log.Println("UpdateUser ", user)
+	if err := validate(user); err != nil {
+		return &pb.Result{Code: 1, Msg: "None valid user"}, err
+	}
+	updateUserInDb(*user)
+	return &pb.Result{Code: 0, Msg: "Update User Sync Mode"}, nil
+}
+
+// Response to DeleteUser Service
+func (s *server) DeleteSyncUser(cxt context.Context, id *pb.Id) (*pb.Result, error) {
+	log.Println("DeleteSyncUser", id)
+	deleteUserInDb(id.Id)
+	return &pb.Result{Code: 0, Msg: "Delete User Sync Mode"}, nil
+}
+
+// Response to GetUsers Service
+func (s *server) GetUsers(*pb.User, pb.UserService_GetUsersServer) error {
+	return nil
 }
 
 //Functions For Redis

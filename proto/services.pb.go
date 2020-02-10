@@ -115,6 +115,8 @@ type User struct {
 	FirstName            string   `protobuf:"bytes,2,opt,name=firstName,proto3" json:"firstName,omitempty"`
 	LastName             string   `protobuf:"bytes,3,opt,name=lastName,proto3" json:"lastName,omitempty"`
 	Age                  int32    `protobuf:"varint,4,opt,name=age,proto3" json:"age,omitempty"`
+	UpdateDate           int64    `protobuf:"varint,5,opt,name=updateDate,proto3" json:"updateDate,omitempty"`
+	CreateDate           int64    `protobuf:"varint,6,opt,name=createDate,proto3" json:"createDate,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -173,10 +175,26 @@ func (m *User) GetAge() int32 {
 	return 0
 }
 
+func (m *User) GetUpdateDate() int64 {
+	if m != nil {
+		return m.UpdateDate
+	}
+	return 0
+}
+
+func (m *User) GetCreateDate() int64 {
+	if m != nil {
+		return m.CreateDate
+	}
+	return 0
+}
+
 type Product struct {
 	ProductId            int64    `protobuf:"varint,1,opt,name=productId,proto3" json:"productId,omitempty"`
 	Name                 string   `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	Description          string   `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	UpdateDate           int64    `protobuf:"varint,4,opt,name=updateDate,proto3" json:"updateDate,omitempty"`
+	CreateDate           int64    `protobuf:"varint,5,opt,name=createDate,proto3" json:"createDate,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -228,6 +246,20 @@ func (m *Product) GetDescription() string {
 	return ""
 }
 
+func (m *Product) GetUpdateDate() int64 {
+	if m != nil {
+		return m.UpdateDate
+	}
+	return 0
+}
+
+func (m *Product) GetCreateDate() int64 {
+	if m != nil {
+		return m.CreateDate
+	}
+	return 0
+}
+
 type Order struct {
 	OrderId              int64    `protobuf:"varint,1,opt,name=orderId,proto3" json:"orderId,omitempty"`
 	UserId               int64    `protobuf:"varint,2,opt,name=userId,proto3" json:"userId,omitempty"`
@@ -235,6 +267,8 @@ type Order struct {
 	Quantity             int32    `protobuf:"varint,4,opt,name=quantity,proto3" json:"quantity,omitempty"`
 	OrderDate            int64    `protobuf:"varint,5,opt,name=orderDate,proto3" json:"orderDate,omitempty"`
 	ShipDate             int64    `protobuf:"varint,6,opt,name=shipDate,proto3" json:"shipDate,omitempty"`
+	UpdateDate           int64    `protobuf:"varint,7,opt,name=updateDate,proto3" json:"updateDate,omitempty"`
+	CreateDate           int64    `protobuf:"varint,8,opt,name=createDate,proto3" json:"createDate,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -307,6 +341,20 @@ func (m *Order) GetShipDate() int64 {
 	return 0
 }
 
+func (m *Order) GetUpdateDate() int64 {
+	if m != nil {
+		return m.UpdateDate
+	}
+	return 0
+}
+
+func (m *Order) GetCreateDate() int64 {
+	if m != nil {
+		return m.CreateDate
+	}
+	return 0
+}
+
 func init() {
 	proto.RegisterType((*Id)(nil), "pb.Id")
 	proto.RegisterType((*Result)(nil), "pb.Result")
@@ -318,35 +366,46 @@ func init() {
 func init() { proto.RegisterFile("services.proto", fileDescriptor_8e16ccb8c5307b32) }
 
 var fileDescriptor_8e16ccb8c5307b32 = []byte{
-	// 444 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x6c, 0x93, 0xcd, 0x8e, 0xd3, 0x30,
-	0x10, 0xc7, 0x9b, 0xb4, 0xcd, 0xb6, 0x13, 0x5a, 0x21, 0x0b, 0xa1, 0x28, 0x42, 0xa8, 0x32, 0x2c,
-	0x5a, 0x81, 0xd4, 0xc3, 0xf2, 0x08, 0xec, 0xa5, 0x17, 0x40, 0x41, 0x7b, 0xe4, 0x90, 0xd6, 0xc3,
-	0x62, 0xd4, 0x6d, 0x82, 0xed, 0x20, 0xf1, 0x2c, 0x5c, 0xb9, 0x72, 0xe5, 0xf9, 0xd0, 0xf8, 0x23,
-	0xa9, 0xb3, 0xdc, 0xfe, 0xf3, 0xf5, 0x9f, 0x9f, 0x63, 0x07, 0xd6, 0x1a, 0xd5, 0x0f, 0x79, 0x40,
-	0xbd, 0x6d, 0x55, 0x63, 0x1a, 0x96, 0xb6, 0x7b, 0xfe, 0x04, 0xd2, 0x9d, 0x60, 0x6b, 0x48, 0xa5,
-	0x28, 0x92, 0x4d, 0x72, 0x35, 0xad, 0x52, 0x29, 0xf8, 0x16, 0xb2, 0x0a, 0x75, 0x77, 0x34, 0x8c,
-	0xc1, 0xec, 0xd0, 0x08, 0xb4, 0xb5, 0x79, 0x65, 0x35, 0x7b, 0x0c, 0xd3, 0x7b, 0x7d, 0x57, 0xa4,
-	0x9b, 0xe4, 0x6a, 0x59, 0x91, 0xe4, 0xdf, 0x60, 0x76, 0xab, 0x51, 0xb1, 0xa7, 0x90, 0x75, 0x1a,
-	0xd5, 0x2e, 0x78, 0xf9, 0x88, 0x3d, 0x83, 0xe5, 0x17, 0xa9, 0xb4, 0x79, 0x5f, 0xdf, 0xa3, 0x9f,
-	0x1b, 0x12, 0xac, 0x84, 0xc5, 0xb1, 0xf6, 0xc5, 0xa9, 0x2d, 0xf6, 0x31, 0xed, 0xaa, 0xef, 0xb0,
-	0x98, 0xd9, 0xf5, 0x24, 0xf9, 0x67, 0xb8, 0xf8, 0xa8, 0x1a, 0xd1, 0x1d, 0x0c, 0xd9, 0xb6, 0x4e,
-	0xf6, 0x1b, 0x87, 0x04, 0xa1, 0x9f, 0x86, 0x7d, 0x56, 0xb3, 0x0d, 0xe4, 0x02, 0xf5, 0x41, 0xc9,
-	0xd6, 0xc8, 0xe6, 0xe4, 0xb7, 0x9d, 0xa7, 0xf8, 0x9f, 0x04, 0xe6, 0x1f, 0x94, 0x40, 0xc5, 0x0a,
-	0xb8, 0x68, 0x48, 0xf4, 0xde, 0x21, 0x3c, 0x3b, 0x66, 0x3a, 0x3e, 0xe6, 0xc0, 0x33, 0x1d, 0xf3,
-	0x94, 0xb0, 0xf8, 0xde, 0xd5, 0x27, 0x23, 0xcd, 0x4f, 0x7f, 0x9e, 0x3e, 0xa6, 0x49, 0x6b, 0x7e,
-	0x53, 0x1b, 0x2c, 0xe6, 0x6e, 0xb2, 0x4f, 0xd0, 0xa4, 0xfe, 0x2a, 0x5b, 0x5b, 0xcc, 0x6c, 0xb1,
-	0x8f, 0xaf, 0x7f, 0x25, 0x90, 0xd3, 0xb7, 0xff, 0xe4, 0xee, 0x96, 0x71, 0x80, 0x77, 0x0a, 0x6b,
-	0x83, 0xf6, 0x42, 0x16, 0xdb, 0x76, 0xbf, 0x25, 0x55, 0xf6, 0x8a, 0x4f, 0xd8, 0x73, 0x58, 0x54,
-	0x58, 0x0b, 0xdb, 0x91, 0x51, 0x7e, 0x27, 0xa2, 0xfa, 0x4b, 0x80, 0xdb, 0x56, 0x3c, 0xf4, 0x00,
-	0x52, 0xee, 0x61, 0xf0, 0x09, 0x6d, 0xba, 0xc1, 0x23, 0xfa, 0xae, 0xe0, 0x13, 0xf5, 0x5c, 0xff,
-	0x4d, 0x60, 0xed, 0x6f, 0x2b, 0x00, 0xbe, 0x81, 0x95, 0x03, 0x0c, 0xb7, 0x98, 0xd3, 0x84, 0x0f,
-	0xca, 0xf3, 0xc0, 0x92, 0xe4, 0x44, 0x1a, 0x5a, 0xc3, 0x92, 0x51, 0xd7, 0x6b, 0x58, 0x39, 0xde,
-	0xff, 0x5a, 0xc6, 0xd4, 0x97, 0xb0, 0x72, 0xd4, 0x63, 0xcf, 0x18, 0xfc, 0x77, 0x02, 0x8f, 0xec,
-	0x33, 0x08, 0xd8, 0x97, 0x90, 0x3b, 0x6c, 0xf7, 0x38, 0x96, 0xd4, 0x6d, 0x65, 0x39, 0x48, 0x3e,
-	0x61, 0x1b, 0x58, 0x12, 0xb0, 0x6b, 0x0a, 0xd6, 0x51, 0xc7, 0x2b, 0xc8, 0x1d, 0xec, 0x03, 0xa3,
-	0x18, 0xf4, 0x05, 0xe4, 0x0e, 0x34, 0xf6, 0x8a, 0x9a, 0xf6, 0x99, 0xfd, 0x93, 0xdf, 0xfe, 0x0b,
-	0x00, 0x00, 0xff, 0xff, 0xb2, 0x32, 0xe7, 0xf7, 0xdb, 0x03, 0x00, 0x00,
+	// 611 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x95, 0x5b, 0x6e, 0xda, 0x4c,
+	0x14, 0xc7, 0x63, 0x73, 0x89, 0xf9, 0x3b, 0xc0, 0xc7, 0xe8, 0x53, 0x85, 0x50, 0x15, 0x21, 0x37,
+	0x17, 0x9a, 0x48, 0x14, 0xd1, 0x25, 0x34, 0x12, 0xe2, 0xa5, 0xad, 0x88, 0xb2, 0x00, 0x63, 0x4f,
+	0x53, 0x4b, 0x04, 0xbb, 0xf6, 0x50, 0x29, 0x4b, 0xe9, 0x43, 0x37, 0xd0, 0x3d, 0x75, 0x09, 0x7d,
+	0xea, 0x06, 0xaa, 0x99, 0xf1, 0x78, 0xec, 0x01, 0x99, 0xbc, 0x9d, 0xdb, 0x9c, 0xf9, 0xfd, 0xcf,
+	0x19, 0x03, 0x7a, 0x19, 0x4d, 0xbf, 0x47, 0x01, 0xcd, 0xa6, 0x49, 0x1a, 0xb3, 0x98, 0xd8, 0xc9,
+	0xda, 0xfb, 0x1f, 0xf6, 0x32, 0x24, 0x3d, 0xd8, 0x51, 0x38, 0xb4, 0xc6, 0xd6, 0xa4, 0xb1, 0xb2,
+	0xa3, 0xd0, 0x9b, 0xa2, 0xbd, 0xa2, 0xd9, 0x6e, 0xc3, 0x08, 0x41, 0x33, 0x88, 0x43, 0x2a, 0x72,
+	0xad, 0x95, 0xb0, 0xc9, 0x7f, 0x68, 0x3c, 0x65, 0x8f, 0x43, 0x7b, 0x6c, 0x4d, 0x3a, 0x2b, 0x6e,
+	0x7a, 0xbf, 0x2c, 0x34, 0x1f, 0x32, 0x9a, 0x92, 0x57, 0x68, 0xef, 0x32, 0x9a, 0x2e, 0x55, 0xb3,
+	0xdc, 0x23, 0xaf, 0xd1, 0xf9, 0x12, 0xa5, 0x19, 0xfb, 0xe8, 0x3f, 0xd1, 0xfc, 0xa0, 0x0e, 0x90,
+	0x11, 0x9c, 0x8d, 0x9f, 0x27, 0x1b, 0x22, 0x59, 0xf8, 0xfc, 0x32, 0xff, 0x91, 0x0e, 0x9b, 0xe2,
+	0x7e, 0x6e, 0x92, 0x73, 0x60, 0x97, 0x84, 0x3e, 0xa3, 0x77, 0x3e, 0xa3, 0xc3, 0x96, 0xb8, 0xa7,
+	0x14, 0xe1, 0xf9, 0x20, 0xa5, 0x2a, 0xdf, 0x96, 0x79, 0x1d, 0xf1, 0x7e, 0x5a, 0x38, 0xfd, 0x9c,
+	0xc6, 0xe1, 0x2e, 0x60, 0x9c, 0x2b, 0x91, 0x66, 0x81, 0xac, 0x03, 0x5c, 0xfc, 0x56, 0x03, 0x0b,
+	0x9b, 0x8c, 0xe1, 0x86, 0x34, 0x0b, 0xd2, 0x28, 0x61, 0x51, 0xbc, 0xcd, 0x71, 0xcb, 0x21, 0x83,
+	0xaf, 0x79, 0x84, 0xaf, 0xb5, 0xc7, 0xf7, 0xc7, 0x42, 0xeb, 0x53, 0x1a, 0xd2, 0x94, 0x0c, 0x71,
+	0x1a, 0x73, 0xa3, 0x60, 0x53, 0x6e, 0x69, 0xce, 0xb6, 0x39, 0x67, 0xad, 0xa7, 0x61, 0xea, 0x19,
+	0xc1, 0xf9, 0xb6, 0xf3, 0xb7, 0x2c, 0x62, 0xcf, 0xf9, 0x40, 0x0b, 0x9f, 0x9f, 0x14, 0xcd, 0x4b,
+	0x50, 0x3a, 0xc0, 0x4f, 0x66, 0x5f, 0xa3, 0xa4, 0x34, 0xd1, 0xc2, 0x37, 0xf4, 0x9e, 0x1e, 0xd1,
+	0xeb, 0x98, 0x7a, 0xe7, 0xbf, 0x6d, 0xb8, 0xfc, 0xf1, 0xdc, 0xcb, 0xd7, 0x49, 0x3c, 0xe0, 0x83,
+	0xc8, 0x8a, 0x17, 0xe5, 0x4c, 0x93, 0xf5, 0x94, 0x5b, 0xa3, 0xc2, 0xf2, 0x4e, 0xc8, 0x39, 0x9c,
+	0x15, 0xf5, 0x43, 0x51, 0xd1, 0xe6, 0xf1, 0x65, 0x58, 0xc9, 0x5f, 0x00, 0x0f, 0x82, 0xc0, 0xe8,
+	0x01, 0x6e, 0xc9, 0xa7, 0xed, 0x9d, 0xf0, 0x9b, 0xee, 0xe8, 0x86, 0xe6, 0x55, 0xaa, 0x4f, 0xb5,
+	0xe6, 0x0a, 0x3d, 0x49, 0x73, 0xff, 0xbc, 0x0d, 0x6a, 0x88, 0x3c, 0x9c, 0x71, 0xa2, 0xa2, 0xea,
+	0x10, 0xd5, 0x04, 0x3d, 0x49, 0x75, 0xa0, 0xd7, 0xde, 0xad, 0x92, 0x6c, 0xaf, 0x9f, 0xa9, 0xc0,
+	0x59, 0x50, 0xc6, 0x0b, 0xb2, 0xc3, 0x5c, 0x33, 0x6b, 0xfe, 0xa3, 0x81, 0x5e, 0xfe, 0xde, 0xd5,
+	0x88, 0x6f, 0xd1, 0x95, 0xa2, 0xd4, 0x77, 0xe0, 0xf2, 0x13, 0xb9, 0x33, 0x2a, 0x3b, 0x62, 0x96,
+	0x2e, 0x57, 0xa6, 0x4a, 0x15, 0x88, 0x51, 0x75, 0x83, 0xae, 0xd4, 0x76, 0xb0, 0x65, 0x95, 0xfa,
+	0x12, 0x5d, 0xa9, 0xce, 0xec, 0x59, 0x2d, 0x7b, 0x87, 0x81, 0x1e, 0xfd, 0x4b, 0x48, 0x27, 0xe8,
+	0xab, 0x1d, 0x1c, 0xa1, 0x9d, 0x62, 0xa0, 0x37, 0xf1, 0x02, 0xe2, 0xb7, 0x18, 0xe8, 0x7d, 0xd4,
+	0x53, 0xdf, 0xc2, 0x5d, 0x50, 0x96, 0xd7, 0x64, 0x75, 0xbc, 0x33, 0x6b, 0xfe, 0xd7, 0xc6, 0x99,
+	0xf8, 0xd6, 0xd5, 0x66, 0x2e, 0xe1, 0x4a, 0xcd, 0xf2, 0x17, 0xa0, 0xc3, 0x0f, 0x08, 0x73, 0xa4,
+	0x4d, 0xef, 0x84, 0x8c, 0xd1, 0xe1, 0x4a, 0x65, 0x91, 0xe2, 0xa8, 0x54, 0x5c, 0xc1, 0x95, 0x0a,
+	0xf7, 0x1a, 0x55, 0x71, 0xdf, 0xc0, 0x95, 0xca, 0xaa, 0xbd, 0x4c, 0xf9, 0x7d, 0xbd, 0x89, 0x7a,
+	0xb2, 0x0b, 0x74, 0xd5, 0x0e, 0x6a, 0xe8, 0x6e, 0xd0, 0xd7, 0xf3, 0x3f, 0x42, 0x78, 0x8d, 0xbe,
+	0x9e, 0x7d, 0x1d, 0xe5, 0x35, 0x3a, 0x0b, 0xca, 0x44, 0x85, 0x31, 0xf7, 0xf2, 0xdd, 0x33, 0x6b,
+	0xdd, 0x16, 0xff, 0x7f, 0xef, 0xff, 0x05, 0x00, 0x00, 0xff, 0xff, 0x45, 0x23, 0x09, 0xf4, 0x11,
+	0x07, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -365,6 +424,11 @@ type UserServiceClient interface {
 	ReadUser(ctx context.Context, in *Id, opts ...grpc.CallOption) (*User, error)
 	UpdateUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*Result, error)
 	DeleteUser(ctx context.Context, in *Id, opts ...grpc.CallOption) (*Result, error)
+	CreateSyncUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*User, error)
+	ReadSyncUser(ctx context.Context, in *Id, opts ...grpc.CallOption) (*User, error)
+	UpdateSyncUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*Result, error)
+	DeleteSyncUser(ctx context.Context, in *Id, opts ...grpc.CallOption) (*Result, error)
+	GetUsers(ctx context.Context, in *User, opts ...grpc.CallOption) (UserService_GetUsersClient, error)
 }
 
 type userServiceClient struct {
@@ -411,12 +475,85 @@ func (c *userServiceClient) DeleteUser(ctx context.Context, in *Id, opts ...grpc
 	return out, nil
 }
 
+func (c *userServiceClient) CreateSyncUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*User, error) {
+	out := new(User)
+	err := c.cc.Invoke(ctx, "/pb.UserService/CreateSyncUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) ReadSyncUser(ctx context.Context, in *Id, opts ...grpc.CallOption) (*User, error) {
+	out := new(User)
+	err := c.cc.Invoke(ctx, "/pb.UserService/ReadSyncUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) UpdateSyncUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*Result, error) {
+	out := new(Result)
+	err := c.cc.Invoke(ctx, "/pb.UserService/UpdateSyncUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) DeleteSyncUser(ctx context.Context, in *Id, opts ...grpc.CallOption) (*Result, error) {
+	out := new(Result)
+	err := c.cc.Invoke(ctx, "/pb.UserService/DeleteSyncUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) GetUsers(ctx context.Context, in *User, opts ...grpc.CallOption) (UserService_GetUsersClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_UserService_serviceDesc.Streams[0], "/pb.UserService/GetUsers", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &userServiceGetUsersClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type UserService_GetUsersClient interface {
+	Recv() (*User, error)
+	grpc.ClientStream
+}
+
+type userServiceGetUsersClient struct {
+	grpc.ClientStream
+}
+
+func (x *userServiceGetUsersClient) Recv() (*User, error) {
+	m := new(User)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 type UserServiceServer interface {
 	CreateUser(context.Context, *User) (*User, error)
 	ReadUser(context.Context, *Id) (*User, error)
 	UpdateUser(context.Context, *User) (*Result, error)
 	DeleteUser(context.Context, *Id) (*Result, error)
+	CreateSyncUser(context.Context, *User) (*User, error)
+	ReadSyncUser(context.Context, *Id) (*User, error)
+	UpdateSyncUser(context.Context, *User) (*Result, error)
+	DeleteSyncUser(context.Context, *Id) (*Result, error)
+	GetUsers(*User, UserService_GetUsersServer) error
 }
 
 // UnimplementedUserServiceServer can be embedded to have forward compatible implementations.
@@ -434,6 +571,21 @@ func (*UnimplementedUserServiceServer) UpdateUser(ctx context.Context, req *User
 }
 func (*UnimplementedUserServiceServer) DeleteUser(ctx context.Context, req *Id) (*Result, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
+}
+func (*UnimplementedUserServiceServer) CreateSyncUser(ctx context.Context, req *User) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateSyncUser not implemented")
+}
+func (*UnimplementedUserServiceServer) ReadSyncUser(ctx context.Context, req *Id) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReadSyncUser not implemented")
+}
+func (*UnimplementedUserServiceServer) UpdateSyncUser(ctx context.Context, req *User) (*Result, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateSyncUser not implemented")
+}
+func (*UnimplementedUserServiceServer) DeleteSyncUser(ctx context.Context, req *Id) (*Result, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteSyncUser not implemented")
+}
+func (*UnimplementedUserServiceServer) GetUsers(req *User, srv UserService_GetUsersServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetUsers not implemented")
 }
 
 func RegisterUserServiceServer(s *grpc.Server, srv UserServiceServer) {
@@ -512,6 +664,99 @@ func _UserService_DeleteUser_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_CreateSyncUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(User)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).CreateSyncUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.UserService/CreateSyncUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).CreateSyncUser(ctx, req.(*User))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_ReadSyncUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Id)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).ReadSyncUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.UserService/ReadSyncUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).ReadSyncUser(ctx, req.(*Id))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_UpdateSyncUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(User)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).UpdateSyncUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.UserService/UpdateSyncUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).UpdateSyncUser(ctx, req.(*User))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_DeleteSyncUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Id)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).DeleteSyncUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.UserService/DeleteSyncUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).DeleteSyncUser(ctx, req.(*Id))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_GetUsers_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(User)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(UserServiceServer).GetUsers(m, &userServiceGetUsersServer{stream})
+}
+
+type UserService_GetUsersServer interface {
+	Send(*User) error
+	grpc.ServerStream
+}
+
+type userServiceGetUsersServer struct {
+	grpc.ServerStream
+}
+
+func (x *userServiceGetUsersServer) Send(m *User) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 var _UserService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "pb.UserService",
 	HandlerType: (*UserServiceServer)(nil),
@@ -532,8 +777,30 @@ var _UserService_serviceDesc = grpc.ServiceDesc{
 			MethodName: "DeleteUser",
 			Handler:    _UserService_DeleteUser_Handler,
 		},
+		{
+			MethodName: "CreateSyncUser",
+			Handler:    _UserService_CreateSyncUser_Handler,
+		},
+		{
+			MethodName: "ReadSyncUser",
+			Handler:    _UserService_ReadSyncUser_Handler,
+		},
+		{
+			MethodName: "UpdateSyncUser",
+			Handler:    _UserService_UpdateSyncUser_Handler,
+		},
+		{
+			MethodName: "DeleteSyncUser",
+			Handler:    _UserService_DeleteSyncUser_Handler,
+		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "GetUsers",
+			Handler:       _UserService_GetUsers_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "services.proto",
 }
 
@@ -545,6 +812,11 @@ type ProductServiceClient interface {
 	ReadProduct(ctx context.Context, in *Id, opts ...grpc.CallOption) (*Product, error)
 	UpdateProduct(ctx context.Context, in *Product, opts ...grpc.CallOption) (*Result, error)
 	DeleteProduct(ctx context.Context, in *Id, opts ...grpc.CallOption) (*Result, error)
+	CreateSyncProduct(ctx context.Context, in *Product, opts ...grpc.CallOption) (*Product, error)
+	ReadSyncProduct(ctx context.Context, in *Id, opts ...grpc.CallOption) (*Product, error)
+	UpdateSyncProduct(ctx context.Context, in *Product, opts ...grpc.CallOption) (*Result, error)
+	DeleteSyncProduct(ctx context.Context, in *Id, opts ...grpc.CallOption) (*Result, error)
+	GetProducts(ctx context.Context, in *Product, opts ...grpc.CallOption) (ProductService_GetProductsClient, error)
 }
 
 type productServiceClient struct {
@@ -591,12 +863,85 @@ func (c *productServiceClient) DeleteProduct(ctx context.Context, in *Id, opts .
 	return out, nil
 }
 
+func (c *productServiceClient) CreateSyncProduct(ctx context.Context, in *Product, opts ...grpc.CallOption) (*Product, error) {
+	out := new(Product)
+	err := c.cc.Invoke(ctx, "/pb.ProductService/CreateSyncProduct", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *productServiceClient) ReadSyncProduct(ctx context.Context, in *Id, opts ...grpc.CallOption) (*Product, error) {
+	out := new(Product)
+	err := c.cc.Invoke(ctx, "/pb.ProductService/ReadSyncProduct", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *productServiceClient) UpdateSyncProduct(ctx context.Context, in *Product, opts ...grpc.CallOption) (*Result, error) {
+	out := new(Result)
+	err := c.cc.Invoke(ctx, "/pb.ProductService/UpdateSyncProduct", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *productServiceClient) DeleteSyncProduct(ctx context.Context, in *Id, opts ...grpc.CallOption) (*Result, error) {
+	out := new(Result)
+	err := c.cc.Invoke(ctx, "/pb.ProductService/DeleteSyncProduct", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *productServiceClient) GetProducts(ctx context.Context, in *Product, opts ...grpc.CallOption) (ProductService_GetProductsClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_ProductService_serviceDesc.Streams[0], "/pb.ProductService/GetProducts", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &productServiceGetProductsClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type ProductService_GetProductsClient interface {
+	Recv() (*Product, error)
+	grpc.ClientStream
+}
+
+type productServiceGetProductsClient struct {
+	grpc.ClientStream
+}
+
+func (x *productServiceGetProductsClient) Recv() (*Product, error) {
+	m := new(Product)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // ProductServiceServer is the server API for ProductService service.
 type ProductServiceServer interface {
 	CreateProduct(context.Context, *Product) (*Product, error)
 	ReadProduct(context.Context, *Id) (*Product, error)
 	UpdateProduct(context.Context, *Product) (*Result, error)
 	DeleteProduct(context.Context, *Id) (*Result, error)
+	CreateSyncProduct(context.Context, *Product) (*Product, error)
+	ReadSyncProduct(context.Context, *Id) (*Product, error)
+	UpdateSyncProduct(context.Context, *Product) (*Result, error)
+	DeleteSyncProduct(context.Context, *Id) (*Result, error)
+	GetProducts(*Product, ProductService_GetProductsServer) error
 }
 
 // UnimplementedProductServiceServer can be embedded to have forward compatible implementations.
@@ -614,6 +959,21 @@ func (*UnimplementedProductServiceServer) UpdateProduct(ctx context.Context, req
 }
 func (*UnimplementedProductServiceServer) DeleteProduct(ctx context.Context, req *Id) (*Result, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteProduct not implemented")
+}
+func (*UnimplementedProductServiceServer) CreateSyncProduct(ctx context.Context, req *Product) (*Product, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateSyncProduct not implemented")
+}
+func (*UnimplementedProductServiceServer) ReadSyncProduct(ctx context.Context, req *Id) (*Product, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReadSyncProduct not implemented")
+}
+func (*UnimplementedProductServiceServer) UpdateSyncProduct(ctx context.Context, req *Product) (*Result, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateSyncProduct not implemented")
+}
+func (*UnimplementedProductServiceServer) DeleteSyncProduct(ctx context.Context, req *Id) (*Result, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteSyncProduct not implemented")
+}
+func (*UnimplementedProductServiceServer) GetProducts(req *Product, srv ProductService_GetProductsServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetProducts not implemented")
 }
 
 func RegisterProductServiceServer(s *grpc.Server, srv ProductServiceServer) {
@@ -692,6 +1052,99 @@ func _ProductService_DeleteProduct_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ProductService_CreateSyncProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Product)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductServiceServer).CreateSyncProduct(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.ProductService/CreateSyncProduct",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductServiceServer).CreateSyncProduct(ctx, req.(*Product))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProductService_ReadSyncProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Id)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductServiceServer).ReadSyncProduct(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.ProductService/ReadSyncProduct",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductServiceServer).ReadSyncProduct(ctx, req.(*Id))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProductService_UpdateSyncProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Product)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductServiceServer).UpdateSyncProduct(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.ProductService/UpdateSyncProduct",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductServiceServer).UpdateSyncProduct(ctx, req.(*Product))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProductService_DeleteSyncProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Id)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductServiceServer).DeleteSyncProduct(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.ProductService/DeleteSyncProduct",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductServiceServer).DeleteSyncProduct(ctx, req.(*Id))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProductService_GetProducts_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(Product)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(ProductServiceServer).GetProducts(m, &productServiceGetProductsServer{stream})
+}
+
+type ProductService_GetProductsServer interface {
+	Send(*Product) error
+	grpc.ServerStream
+}
+
+type productServiceGetProductsServer struct {
+	grpc.ServerStream
+}
+
+func (x *productServiceGetProductsServer) Send(m *Product) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 var _ProductService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "pb.ProductService",
 	HandlerType: (*ProductServiceServer)(nil),
@@ -712,8 +1165,30 @@ var _ProductService_serviceDesc = grpc.ServiceDesc{
 			MethodName: "DeleteProduct",
 			Handler:    _ProductService_DeleteProduct_Handler,
 		},
+		{
+			MethodName: "CreateSyncProduct",
+			Handler:    _ProductService_CreateSyncProduct_Handler,
+		},
+		{
+			MethodName: "ReadSyncProduct",
+			Handler:    _ProductService_ReadSyncProduct_Handler,
+		},
+		{
+			MethodName: "UpdateSyncProduct",
+			Handler:    _ProductService_UpdateSyncProduct_Handler,
+		},
+		{
+			MethodName: "DeleteSyncProduct",
+			Handler:    _ProductService_DeleteSyncProduct_Handler,
+		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "GetProducts",
+			Handler:       _ProductService_GetProducts_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "services.proto",
 }
 
@@ -725,6 +1200,11 @@ type OrderServiceClient interface {
 	ReadOrder(ctx context.Context, in *Id, opts ...grpc.CallOption) (*Order, error)
 	UpdateOrder(ctx context.Context, in *Order, opts ...grpc.CallOption) (*Result, error)
 	DeleteOrder(ctx context.Context, in *Id, opts ...grpc.CallOption) (*Result, error)
+	CreateSyncOrder(ctx context.Context, in *Order, opts ...grpc.CallOption) (*Order, error)
+	ReadSyncOrder(ctx context.Context, in *Id, opts ...grpc.CallOption) (*Order, error)
+	UpdateSyncOrder(ctx context.Context, in *Order, opts ...grpc.CallOption) (*Result, error)
+	DeleteSyncOrder(ctx context.Context, in *Id, opts ...grpc.CallOption) (*Result, error)
+	GetOrders(ctx context.Context, in *Product, opts ...grpc.CallOption) (OrderService_GetOrdersClient, error)
 }
 
 type orderServiceClient struct {
@@ -771,12 +1251,85 @@ func (c *orderServiceClient) DeleteOrder(ctx context.Context, in *Id, opts ...gr
 	return out, nil
 }
 
+func (c *orderServiceClient) CreateSyncOrder(ctx context.Context, in *Order, opts ...grpc.CallOption) (*Order, error) {
+	out := new(Order)
+	err := c.cc.Invoke(ctx, "/pb.OrderService/CreateSyncOrder", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *orderServiceClient) ReadSyncOrder(ctx context.Context, in *Id, opts ...grpc.CallOption) (*Order, error) {
+	out := new(Order)
+	err := c.cc.Invoke(ctx, "/pb.OrderService/ReadSyncOrder", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *orderServiceClient) UpdateSyncOrder(ctx context.Context, in *Order, opts ...grpc.CallOption) (*Result, error) {
+	out := new(Result)
+	err := c.cc.Invoke(ctx, "/pb.OrderService/UpdateSyncOrder", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *orderServiceClient) DeleteSyncOrder(ctx context.Context, in *Id, opts ...grpc.CallOption) (*Result, error) {
+	out := new(Result)
+	err := c.cc.Invoke(ctx, "/pb.OrderService/DeleteSyncOrder", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *orderServiceClient) GetOrders(ctx context.Context, in *Product, opts ...grpc.CallOption) (OrderService_GetOrdersClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_OrderService_serviceDesc.Streams[0], "/pb.OrderService/GetOrders", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &orderServiceGetOrdersClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type OrderService_GetOrdersClient interface {
+	Recv() (*Order, error)
+	grpc.ClientStream
+}
+
+type orderServiceGetOrdersClient struct {
+	grpc.ClientStream
+}
+
+func (x *orderServiceGetOrdersClient) Recv() (*Order, error) {
+	m := new(Order)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // OrderServiceServer is the server API for OrderService service.
 type OrderServiceServer interface {
 	CreateOrder(context.Context, *Order) (*Order, error)
 	ReadOrder(context.Context, *Id) (*Order, error)
 	UpdateOrder(context.Context, *Order) (*Result, error)
 	DeleteOrder(context.Context, *Id) (*Result, error)
+	CreateSyncOrder(context.Context, *Order) (*Order, error)
+	ReadSyncOrder(context.Context, *Id) (*Order, error)
+	UpdateSyncOrder(context.Context, *Order) (*Result, error)
+	DeleteSyncOrder(context.Context, *Id) (*Result, error)
+	GetOrders(*Product, OrderService_GetOrdersServer) error
 }
 
 // UnimplementedOrderServiceServer can be embedded to have forward compatible implementations.
@@ -794,6 +1347,21 @@ func (*UnimplementedOrderServiceServer) UpdateOrder(ctx context.Context, req *Or
 }
 func (*UnimplementedOrderServiceServer) DeleteOrder(ctx context.Context, req *Id) (*Result, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteOrder not implemented")
+}
+func (*UnimplementedOrderServiceServer) CreateSyncOrder(ctx context.Context, req *Order) (*Order, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateSyncOrder not implemented")
+}
+func (*UnimplementedOrderServiceServer) ReadSyncOrder(ctx context.Context, req *Id) (*Order, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReadSyncOrder not implemented")
+}
+func (*UnimplementedOrderServiceServer) UpdateSyncOrder(ctx context.Context, req *Order) (*Result, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateSyncOrder not implemented")
+}
+func (*UnimplementedOrderServiceServer) DeleteSyncOrder(ctx context.Context, req *Id) (*Result, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteSyncOrder not implemented")
+}
+func (*UnimplementedOrderServiceServer) GetOrders(req *Product, srv OrderService_GetOrdersServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetOrders not implemented")
 }
 
 func RegisterOrderServiceServer(s *grpc.Server, srv OrderServiceServer) {
@@ -872,6 +1440,99 @@ func _OrderService_DeleteOrder_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _OrderService_CreateSyncOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Order)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServiceServer).CreateSyncOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.OrderService/CreateSyncOrder",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServiceServer).CreateSyncOrder(ctx, req.(*Order))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OrderService_ReadSyncOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Id)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServiceServer).ReadSyncOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.OrderService/ReadSyncOrder",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServiceServer).ReadSyncOrder(ctx, req.(*Id))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OrderService_UpdateSyncOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Order)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServiceServer).UpdateSyncOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.OrderService/UpdateSyncOrder",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServiceServer).UpdateSyncOrder(ctx, req.(*Order))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OrderService_DeleteSyncOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Id)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServiceServer).DeleteSyncOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.OrderService/DeleteSyncOrder",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServiceServer).DeleteSyncOrder(ctx, req.(*Id))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OrderService_GetOrders_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(Product)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(OrderServiceServer).GetOrders(m, &orderServiceGetOrdersServer{stream})
+}
+
+type OrderService_GetOrdersServer interface {
+	Send(*Order) error
+	grpc.ServerStream
+}
+
+type orderServiceGetOrdersServer struct {
+	grpc.ServerStream
+}
+
+func (x *orderServiceGetOrdersServer) Send(m *Order) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 var _OrderService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "pb.OrderService",
 	HandlerType: (*OrderServiceServer)(nil),
@@ -892,7 +1553,29 @@ var _OrderService_serviceDesc = grpc.ServiceDesc{
 			MethodName: "DeleteOrder",
 			Handler:    _OrderService_DeleteOrder_Handler,
 		},
+		{
+			MethodName: "CreateSyncOrder",
+			Handler:    _OrderService_CreateSyncOrder_Handler,
+		},
+		{
+			MethodName: "ReadSyncOrder",
+			Handler:    _OrderService_ReadSyncOrder_Handler,
+		},
+		{
+			MethodName: "UpdateSyncOrder",
+			Handler:    _OrderService_UpdateSyncOrder_Handler,
+		},
+		{
+			MethodName: "DeleteSyncOrder",
+			Handler:    _OrderService_DeleteSyncOrder_Handler,
+		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "GetOrders",
+			Handler:       _OrderService_GetOrders_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "services.proto",
 }

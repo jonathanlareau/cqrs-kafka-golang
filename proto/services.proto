@@ -28,6 +28,8 @@ message User{
     string firstName = 2;
     string lastName = 3;
     int32 age = 4;
+    time updateDate = 5;
+    int64 createDate = 6;
 }
 
 service UserService {
@@ -35,12 +37,19 @@ service UserService {
     rpc ReadUser(Id) returns (User) {}
     rpc UpdateUser(User) returns (Result) {}
     rpc DeleteUser(Id) returns (Result) {}
+    rpc CreateSyncUser(User) returns (User) {}
+    rpc ReadSyncUser(Id) returns (User) {}
+    rpc UpdateSyncUser(User) returns (Result) {}
+    rpc DeleteSyncUser(Id) returns (Result) {}
+    rpc GetUsers(User) returns (stream User) {}
 }
 
 message Product{
     int64 productId = 1;
     string name = 2;
     string description = 3;
+    int64 updateDate = 4;
+    int64 createDate = 5;
 }
 
 service ProductService {
@@ -48,6 +57,12 @@ service ProductService {
     rpc ReadProduct(Id) returns (Product) {}
     rpc UpdateProduct(Product) returns (Result) {}
     rpc DeleteProduct(Id) returns (Result) {}
+    rpc CreateSyncProduct(Product) returns (Product) {}
+    rpc ReadSyncProduct(Id) returns (Product) {}
+    rpc UpdateSyncProduct(Product) returns (Result) {}
+    rpc DeleteSyncProduct(Id) returns (Result) {}
+    rpc GetProducts(Product) returns (stream Product) {}
+
 }
 
 message Order {
@@ -57,6 +72,8 @@ message Order {
     int32 quantity = 4;
     int64 orderDate = 5;
     int64 shipDate = 6;
+    int64 updateDate = 7;
+    int64 createDate = 8;    
 }
 
 service OrderService {
@@ -64,6 +81,11 @@ service OrderService {
     rpc ReadOrder(Id) returns (Order) {}
     rpc UpdateOrder(Order) returns (Result) {}
     rpc DeleteOrder(Id) returns (Result) {}
+    rpc CreateSyncOrder(Order) returns (Order) {}
+    rpc ReadSyncOrder(Id) returns (Order) {}
+    rpc UpdateSyncOrder(Order) returns (Result) {}
+    rpc DeleteSyncOrder(Id) returns (Result) {}
+    rpc GetOrders(Product) returns (stream Order) {}
 }
 
 
