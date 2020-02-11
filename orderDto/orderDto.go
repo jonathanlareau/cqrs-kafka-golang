@@ -12,6 +12,7 @@ import (
 	"encoding/json"
 	"log"
 	"net"
+	"os"
 	"strconv"
 	"time"
 
@@ -31,8 +32,12 @@ var redisClient redis.Conn = nil
 func main() {
 	var err error
 
+	orderdtoport := os.Getenv("ORDERDTO_SERVICE_PORT")
+
+	log.Println("username : ", os.Getenv("USERNAME"))
+
 	// Initilize the connection with Postgresql
-	redisClient, err = redis.Dial("tcp", "192.168.99.100:6379")
+	redisClient, err = redis.Dial("tcp", "redis:6379")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -40,9 +45,11 @@ func main() {
 	defer redisClient.Close()
 
 	// Prepare to Receive Call from GRPC Client
-	lis, err := net.Listen("tcp", ":3003")
+	orderport := os.Getenv("ORDERDTO_SERVICE_PORT")
+	log.Printf("Application is running on : %s .....", orderport)
+	lis, err := net.Listen("tcp", ":" + orderdtoport)
 	if err != nil {
-		log.Fatalf("Failed to listen on port 3003:  %v", err)
+		log.Fatalf("Failed to listen on port %s:  %v", orderdtoport, err)
 	}
 	s := grpc.NewServer()
 	pb.RegisterOrderDtoServiceServer(s, &server{})
@@ -56,10 +63,16 @@ func main() {
 
 // Response to ReadOrderDto Service
 func (s *server) ReadOrderDto(cxt context.Context, id *pb.Id) (*pb.OrderDto, error) {
+	userport := os.Getenv("USER_SERVICE_PORT")
+
+	productport := os.Getenv("PRODUCT_SERVICE_PORT")
+
+	orderport := os.Getenv("ORDER_SERVICE_PORT")
+
 	log.Println("ReadOrderDto ", id)
-	connUser, errUser := grpc.Dial("user-service:3000", grpc.WithInsecure())
-	connProduct, errProduct := grpc.Dial("user-service:3001", grpc.WithInsecure())
-	connOrder, errOrder := grpc.Dial("user-service:3002", grpc.WithInsecure())
+	connUser, errUser := grpc.Dial("user-service:"+userport, grpc.WithInsecure())
+	connProduct, errProduct := grpc.Dial("product-service:"+productport, grpc.WithInsecure())
+	connOrder, errOrder := grpc.Dial("order-service:"+orderport, grpc.WithInsecure())
 	if errUser != nil {
 		panic(errUser)
 	}
@@ -75,6 +88,12 @@ func (s *server) ReadOrderDto(cxt context.Context, id *pb.Id) (*pb.OrderDto, err
 
 	orderServiceClient := pb.NewOrderServiceClient(connOrder)
 	order, errReadOrder := orderServiceClient.ReadOrder(ctx, id)
+	log.Println(order)
+	log.Println(order.OrderId)
+	log.Println(order.UserId)
+	log.Println(order.UserId)
+	log.Println(order.ProductId)
+	log.Println(order.UpdateDate)
 	if errReadOrder != nil {
 		panic(errReadOrder)
 	}
@@ -82,6 +101,10 @@ func (s *server) ReadOrderDto(cxt context.Context, id *pb.Id) (*pb.OrderDto, err
 	userID := pb.Id{Id: order.UserId}
 	userServiceClient := pb.NewUserServiceClient(connUser)
 	user, errReadUser := userServiceClient.ReadUser(ctx, &userID)
+	log.Println(user)
+	log.Println(user.UserId)
+	log.Println(user.FirstName)
+	log.Println(user.LastName)
 	if errReadUser != nil {
 		panic(errReadUser)
 	}
@@ -89,6 +112,7 @@ func (s *server) ReadOrderDto(cxt context.Context, id *pb.Id) (*pb.OrderDto, err
 	productID := pb.Id{Id: order.ProductId}
 	productServiceClient := pb.NewProductServiceClient(connProduct)
 	product, errReadProduct := productServiceClient.ReadProduct(ctx, &productID)
+	log.Println(product)
 	if errReadProduct != nil {
 		panic(errReadProduct)
 	}

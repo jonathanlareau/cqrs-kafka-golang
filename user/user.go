@@ -12,6 +12,7 @@ import (
 	"encoding/json"
 	"log"
 	"net"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -43,7 +44,7 @@ func main() {
 	var err error
 
 	// Initilize the connection with Postgresql
-	redisClient, err = redis.Dial("tcp", "192.168.99.100:6379")
+	redisClient, err = redis.Dial("tcp", "redis:6379")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -51,7 +52,7 @@ func main() {
 	defer redisClient.Close()
 
 	// Initilize the connection with Postgresql
-	dbConn, err = pgx.Connect(context.Background(), "postgresql://postgres:password@192.168.99.100:5432/cqrs")
+	dbConn, err = pgx.Connect(context.Background(), "postgresql://postgres:password@postgresql:5432/cqrs")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -88,9 +89,11 @@ func main() {
 	}()
 
 	// Prepare to Receive Call from GRPC Client
+	userport := os.Getenv("USER_SERVICE_PORT")
+	log.Printf("Application is running on : %s .....", userport)
 	lis, err := net.Listen("tcp", ":3000")
 	if err != nil {
-		log.Fatalf("Failed to listen on port 3000:  %v", err)
+		log.Fatalf("Failed to listen on port %s :  %v", userport, err)
 	}
 	s := grpc.NewServer()
 	pb.RegisterUserServiceServer(s, &server{})

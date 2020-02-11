@@ -99,8 +99,16 @@ CREATE TABLE cqrs_order(
    createdate date NOT NULL
 );
 
+insert into cqrs_user (userid, firstname, lastname, age, updatedate, createdate) values (default, 'myfirst', 'mylast', 36, NOW(), NOW());
+
+insert into cqrs_product (productid, name, description, updatedate, createdate) values (default, 'goodproduct', 'very good product', NOW(), NOW());
+
+insert into cqrs_order (orderid, userid, productid, quantity, orderdate, shipdate, updatedate, createdate) values (default, 1, 1, 243, NOW(), NOW(), NOW(), NOW());
+
 ## Test
 *ToDo fix to respect RestFull Api Method*
+
+- User
 
 curl http://localhost:8080/api/user/create/firstname/myfirst0/lastname/mylast0/age/31/
 
@@ -115,3 +123,15 @@ curl http://localhost:8080/api/user/read/4/
 curl http://localhost:8080/api/user/update/4/firstname/myfirst4/lastname/mylast4/age/35/
 
 curl http://localhost:8080/api/user/delete/4/
+
+- Order
+
+curl http://localhost:8080/api/order/read/4/
+
+## Environment Setting
+
+SET FACADE_SERVICE_PORT=8080
+SET USER_SERVICE_PORT=3000
+SET PRODUCT_SERVICE_PORT=3001
+SET ORDER_SERVICE_PORT=3002
+SET ORDERDTO_SERVICE_PORT=3003

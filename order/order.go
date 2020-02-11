@@ -15,6 +15,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"os"
 
 	"github.com/gomodule/redigo/redis"
 	"github.com/jackc/pgx/v4"
@@ -43,7 +44,7 @@ func main() {
 	var err error
 
 	// Initilize the connection with Postgresql
-	redisClient, err = redis.Dial("tcp", "192.168.99.100:6379")
+	redisClient, err = redis.Dial("tcp", "redis:6379")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -51,7 +52,7 @@ func main() {
 	defer redisClient.Close()
 
 	// Initilize the connection with Postgresql
-	dbConn, err = pgx.Connect(context.Background(), "postgresql://postgres:password@192.168.99.100:5432/cqrs")
+	dbConn, err = pgx.Connect(context.Background(), "postgresql://postgres:password@postgresql:5432/cqrs")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -88,9 +89,11 @@ func main() {
 	}()
 
 	// Prepare to Receive Call from GRPC Client
-	lis, err := net.Listen("tcp", ":3002")
+	orderport := os.Getenv("ORDER_SERVICE_PORT")
+	log.Printf("Application is running on : %s .....", orderport)
+	lis, err := net.Listen("tcp", ":" + orderport)
 	if err != nil {
-		log.Fatalf("Failed to listen on port 3002:  %v", err)
+		log.Fatalf("Failed to listen on port %s:  %v", orderport, err)
 	}
 	s := grpc.NewServer()
 	pb.RegisterOrderServiceServer(s, &server{})
@@ -203,21 +206,28 @@ func setInRedis(order pb.Order) {
 // getInRedis Get a Order Entry in Redis
 func getInRedis(id int64) pb.Order {
 	log.Println("getInRedis ", id)
+	log.Println("getInRedis 3")
 	newOrder, errRedis := redis.Bytes(redisClient.Do("GET", "order-"+strconv.FormatInt(id, 10)))
+	log.Println("getInRedis 4")
 	if newOrder == nil {
 		log.Printf("Order not found in Redis")
 		order := readOrderInDb(id)
+		log.Println("getInRedis 5",order)
 		setInRedis(order)
 		return order
 	}
+	log.Println("getInRedis 6")
 	if errRedis != nil {
 		log.Printf("Error while Unmarshal a message: %v", errRedis)
 	}
+	log.Println("getInRedis 7")
 	var order pb.Order
+	log.Println("getInRedis 8")
 	err := json.Unmarshal([]byte(newOrder), &order)
 	if err != nil {
 		log.Printf("Error while Unmarshal a message: %v", err)
 	}
+	log.Println("getInRedis 9")
 	return order
 }
 
@@ -248,19 +258,31 @@ func createOrderInDb(order pb.Order) pb.Order {
 func readOrderInDb(orderID int64) pb.Order {
 	var dborder pb.Order
 	log.Println("Read db id ", orderID)
+	log.Println("Read db id 111")
 	orderTime := time.Now()
+	log.Println("Read db id 12")
 	shipTime := time.Now()
+	log.Println("Read db id 1")
 	updateTime := time.Now()
+	log.Println("Read db id 2")
 	createTime := time.Now()
-	if err := dbConn.QueryRow(context.Background(), "select orderid,firstname,lastname,age,updatedate,createdate from cqrs_order where orderid=$1", orderID).Scan(&dborder.OrderId, &dborder.UserId, &dborder.ProductId, &orderTime, &shipTime, &updateTime, &createTime); err != nil {
+	log.Println("Read db id 3")
+	if err := dbConn.QueryRow(context.Background(), "select orderid,userid,productid,orderdate, shipdate,updatedate,createdate from cqrs_order where orderid=$1", orderID).Scan(&dborder.OrderId, &dborder.UserId, &dborder.ProductId, &orderTime, &shipTime, &updateTime, &createTime); err != nil {
+		log.Println("Read db id 1")
 		log.Printf("QueryRow failed: %v\n", err)
 		return pb.Order{}
 	}
+	log.Println("Read db id 4")
+	log.Println("Read db id 5")
 	dborder.OrderDate = orderTime.UnixNano() / 1000000
+	log.Println("Read db id 6")
 	dborder.ShipDate = shipTime.UnixNano() / 1000000
+	log.Println("Read db id 7")
 	dborder.UpdateDate = createTime.UnixNano() / 1000000
+	log.Println("Read db id 8")
 	dborder.CreateDate = updateTime.UnixNano() / 1000000
 	log.Println(dborder)
+	log.Println("Read db id 9")
 	return dborder
 }
 
