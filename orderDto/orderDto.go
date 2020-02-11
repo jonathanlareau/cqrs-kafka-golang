@@ -63,6 +63,13 @@ func main() {
 
 // Response to ReadOrderDto Service
 func (s *server) ReadOrderDto(cxt context.Context, id *pb.Id) (*pb.OrderDto, error) {
+	log.Println("ReadOrderDto ", id)
+    orderDto := getInRedis(id.Id)
+    if orderDto.Order.OrderId != int64(0) {
+		return &orderDto, nil
+	} else {
+		log.Println("ReadOrderDto 4")
+
 	userport := os.Getenv("USER_SERVICE_PORT")
 
 	productport := os.Getenv("PRODUCT_SERVICE_PORT")
@@ -119,14 +126,19 @@ func (s *server) ReadOrderDto(cxt context.Context, id *pb.Id) (*pb.OrderDto, err
 
 	orderDto := &pb.OrderDto{Order: order, User: user, Product: product}
 
+	setInRedis(*orderDto)
+
 	return orderDto, nil
+			
+}
+
 }
 
 //Functions For Redis
 
 // setInRedis Set a OrderDto Entry in Redis
 func setInRedis(orderDto pb.OrderDto) {
-	log.Println("setInRedis ", orderDto)
+	log.Println("setInRedis ")
 	marsh, errMarsh := json.Marshal(orderDto)
 	if errMarsh != nil {
 		log.Printf("Error while Unmarshal a message: %v", errMarsh)
@@ -141,12 +153,17 @@ func setInRedis(orderDto pb.OrderDto) {
 func getInRedis(id int64) pb.OrderDto {
 	log.Println("getInRedis ", id)
 	newOrderDto, errRedis := redis.Bytes(redisClient.Do("GET", "orderDto-"+strconv.FormatInt(id, 10)))
-	if newOrderDto == nil {
 
+	if len(newOrderDto) == 0 {
+		orderDto := pb.OrderDto{}
+        orderDto.Order = &pb.Order{OrderId:0}
+		return orderDto
 	}
+	
 	if errRedis != nil {
 		log.Printf("Error while Unmarshal a message: %v", errRedis)
 	}
+
 	var orderDto pb.OrderDto
 	err := json.Unmarshal([]byte(newOrderDto), &orderDto)
 	if err != nil {
