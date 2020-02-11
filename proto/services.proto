@@ -28,7 +28,7 @@ message User{
     string firstName = 2;
     string lastName = 3;
     int32 age = 4;
-    time updateDate = 5;
+    int64 updateDate = 5;
     int64 createDate = 6;
 }
 
@@ -85,7 +85,16 @@ service OrderService {
     rpc ReadSyncOrder(Id) returns (Order) {}
     rpc UpdateSyncOrder(Order) returns (Result) {}
     rpc DeleteSyncOrder(Id) returns (Result) {}
-    rpc GetOrders(Product) returns (stream Order) {}
+    rpc GetOrders(Order) returns (stream Order) {}
 }
 
+message OrderDto {
+    Order order = 1;
+    User user = 2;
+    Product product = 3;
+}
+
+service OrderDtoService {
+    rpc ReadOrderDto(Id) returns (OrderDto) {}
+}
 

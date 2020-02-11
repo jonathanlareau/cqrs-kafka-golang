@@ -14,15 +14,39 @@ C:\kafka_2.13-2.4.0\bin\windows/kafka-server-start.bat C:\kafka_2.13-2.4.0\confi
 
 ## Create Topic
 From user.go:
-- createUserTopic   = "user-create"
-- updateUserTopic   = "user-update"
-- deleteUserTopic   = "user-delete"
+
+-User
 
 C:\kafka_2.13-2.4.0\bin\windows/kafka-topics.bat –create –zookeeper kafka-zookeeper:2181 –replication-factor 1 –partitions 1 –topic user-create
 
 C:\kafka_2.13-2.4.0\bin\windows/kafka-topics.bat –create –zookeeper kafka-zookeeper:2181 –replication-factor 1 –partitions 1 –topic user-update
 
 C:\kafka_2.13-2.4.0\bin\windows/kafka-topics.bat –create –zookeeper kafka-zookeeper:2181 –replication-factor 1 –partitions 1 –topic user-delete
+
+-Product
+
+C:\kafka_2.13-2.4.0\bin\windows/kafka-topics.bat –create –zookeeper kafka-zookeeper:2181 –replication-factor 1 –partitions 1 –topic product-create
+
+C:\kafka_2.13-2.4.0\bin\windows/kafka-topics.bat –create –zookeeper kafka-zookeeper:2181 –replication-factor 1 –partitions 1 –topic product-update
+
+C:\kafka_2.13-2.4.0\bin\windows/kafka-topics.bat –create –zookeeper kafka-zookeeper:2181 –replication-factor 1 –partitions 1 –topic product-delete
+
+-order
+
+C:\kafka_2.13-2.4.0\bin\windows/kafka-topics.bat –create –zookeeper kafka-zookeeper:2181 –replication-factor 1 –partitions 1 –topic order-create
+
+C:\kafka_2.13-2.4.0\bin\windows/kafka-topics.bat –create –zookeeper kafka-zookeeper:2181 –replication-factor 1 –partitions 1 –topic order-update
+
+C:\kafka_2.13-2.4.0\bin\windows/kafka-topics.bat –create –zookeeper kafka-zookeeper:2181 –replication-factor 1 –partitions 1 –topic order-delete
+
+-orderdto
+
+C:\kafka_2.13-2.4.0\bin\windows/kafka-topics.bat –create –zookeeper kafka-zookeeper:2181 –replication-factor 1 –partitions 1 –topic orderdto-create
+
+C:\kafka_2.13-2.4.0\bin\windows/kafka-topics.bat –create –zookeeper kafka-zookeeper:2181 –replication-factor 1 –partitions 1 –topic orderdto-update
+
+C:\kafka_2.13-2.4.0\bin\windows/kafka-topics.bat –create –zookeeper kafka-zookeeper:2181 –replication-factor 1 –partitions 1 –topic orderdto-delete
+
 
 ## To see your messages
 
@@ -64,7 +88,16 @@ CREATE TABLE cqrs_product(
    createdate date NOT NULL
 );
 
-SELECT * FROM cqrs_user
+CREATE TABLE cqrs_order(
+   orderid serial PRIMARY KEY,
+   userid integer NOT NULL,
+   productid integer NOT NULL,
+   quantity integer NOT NULL,
+   orderDate date NOT NULL,
+   shipDate date NOT NULL,
+   updatedate date NOT NULL,
+   createdate date NOT NULL
+);
 
 ## Test
 *ToDo fix to respect RestFull Api Method*

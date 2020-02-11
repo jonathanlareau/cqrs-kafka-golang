@@ -43,7 +43,7 @@ func main() {
 	var err error
 
 	// Initilize the connection with Postgresql
-	redisClient, err = redis.Dial("tcp", "192.168.99.101:6379")
+	redisClient, err = redis.Dial("tcp", "192.168.99.100:6379")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -51,7 +51,7 @@ func main() {
 	defer redisClient.Close()
 
 	// Initilize the connection with Postgresql
-	dbConn, err = pgx.Connect(context.Background(), "postgresql://postgres:password@192.168.99.101:5432/cqrs")
+	dbConn, err = pgx.Connect(context.Background(), "postgresql://postgres:password@192.168.99.100:5432/cqrs")
 	if err != nil {
 		log.Fatal(err)
 	}
