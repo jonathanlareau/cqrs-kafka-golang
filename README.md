@@ -100,10 +100,14 @@ CREATE TABLE cqrs_order(
 );
 
 insert into cqrs_user (userid, firstname, lastname, age, updatedate, createdate) values (default, 'myfirst', 'mylast', 36, NOW(), NOW());
+insert into cqrs_user (userid, firstname, lastname, age, updatedate, createdate) values (default, 'myfirst2', 'mylast2', 37, NOW(), NOW());
 
 insert into cqrs_product (productid, name, description, updatedate, createdate) values (default, 'goodproduct', 'very good product', NOW(), NOW());
+insert into cqrs_product (productid, name, description, updatedate, createdate) values (default, 'goodproduct2', 'very good product2', NOW(), NOW());
 
 insert into cqrs_order (orderid, userid, productid, quantity, orderdate, shipdate, updatedate, createdate) values (default, 1, 1, 243, NOW(), NOW(), NOW(), NOW());
+insert into cqrs_order (orderid, userid, productid, quantity, orderdate, shipdate, updatedate, createdate) values (default, 2, 2, 243, NOW(), NOW(), NOW(), NOW());
+insert into cqrs_order (orderid, userid, productid, quantity, orderdate, shipdate, updatedate, createdate) values (default, 1, 2, 243, NOW(), NOW(), NOW(), NOW());
 
 ## Test
 *ToDo fix to respect RestFull Api Method*

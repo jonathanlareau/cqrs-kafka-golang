@@ -96,5 +96,7 @@ message OrderDto {
 
 service OrderDtoService {
     rpc ReadOrderDto(Id) returns (OrderDto) {}
+    rpc ReadSyncOrderDto(Id) returns (OrderDto) {}
+    rpc UpdateOrderDto(Id) returns (Result) {}
 }
 

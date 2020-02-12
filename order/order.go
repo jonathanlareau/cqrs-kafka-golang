@@ -12,10 +12,10 @@ import (
 	"encoding/json"
 	"log"
 	"net"
+	"os"
 	"strconv"
 	"strings"
 	"time"
-	"os"
 
 	"github.com/gomodule/redigo/redis"
 	"github.com/jackc/pgx/v4"
@@ -91,7 +91,7 @@ func main() {
 	// Prepare to Receive Call from GRPC Client
 	orderport := os.Getenv("ORDER_SERVICE_PORT")
 	log.Printf("Application is running on : %s .....", orderport)
-	lis, err := net.Listen("tcp", ":" + orderport)
+	lis, err := net.Listen("tcp", ":"+orderport)
 	if err != nil {
 		log.Fatalf("Failed to listen on port %s:  %v", orderport, err)
 	}
@@ -212,7 +212,7 @@ func getInRedis(id int64) pb.Order {
 	if newOrder == nil {
 		log.Printf("Order not found in Redis")
 		order := readOrderInDb(id)
-		log.Println("getInRedis 5",order)
+		log.Println("getInRedis 5", order)
 		setInRedis(order)
 		return order
 	}
